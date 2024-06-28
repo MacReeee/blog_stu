@@ -1,0 +1,18 @@
+[viewer]
+    Title = "Go语言博客"
+    Description = "Go语言博客"
+    Logo = "/resource/images/logo.png"
+    Navigation = ["首页","/", "GO语言","/golang", "归档","/pigeonhole", "关于","/about"]
+    Bilibili = "https://space.bilibili.com/473844125"
+    Zhihu = "https://www.zhihu.com/people/ma-shen-zhi-lu"
+    Avatar = "https://avatars.githubusercontent.com/u/54505023?s=400&u=965ad764e3376feb406d986a4c679aa62b9dafcb&v=4"
+    UserName = "张三"
+    UserDesc = "长得非常帅的程序员"
+[system]
+    CdnURL = "https://static.mszlu.com/goblog/es6/md-assets"
+    QiniuAccessKey = "替换自己的"
+    QiniuSecretKey = "替换自己的"
+    Valine = true
+    ValineAppid = "替换自己的"
+    ValineAppkey = "替换自己的"
+    ValineServerURL = "替换自己的"
