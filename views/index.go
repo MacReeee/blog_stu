@@ -1,9 +1,10 @@
 package views
 
 import (
+	"errors"
 	"goblog/common"
-	"goblog/config"
-	"goblog/models"
+	"goblog/service"
+	"log"
 	"net/http"
 	"time"
 )
@@ -22,34 +23,11 @@ func date(layout string) string {
 
 func (*HTMLApi) Index(w http.ResponseWriter, r *http.Request) {
 	index := common.Template.Index
-	//假数据
-	var categorys = []models.Category{
-		{
-			Cid:  1,
-			Name: "go",
-		},
-	}
-	var posts = []models.PostMore{
-		{
-			Pid:          1,
-			Title:        "go博客",
-			Content:      "内容",
-			UserName:     "张三",
-			ViewCount:    123,
-			CreateAt:     "2022-02-20",
-			CategoryId:   1,
-			CategoryName: "go",
-			Type:         0,
-		},
-	}
-	var hr = &models.HomeResponse{
-		Viewer:    config.Cfg.Viewer,
-		Categorys: categorys,
-		Posts:     posts,
-		Total:     1,
-		Page:      1,
-		Pages:     []int{1},
-		PageEnd:   true,
+	//数据库查询
+	hr, err := service.GetAllIndexInfo()
+	if err != nil {
+		log.Println("首页获取数据出错: ", err)
+		index.WriteData(w, errors.New("系统错误,请联系管理员: "+string(err.Error())))
 	}
 	index.WriteData(w, hr)
 }

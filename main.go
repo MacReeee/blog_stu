@@ -7,9 +7,12 @@ import (
 	"net/http"
 )
 
+func init() {
+	log.SetFlags(log.Ldate | log.Llongfile)
+}
+
 func main() {
 	common.LoadTemplate()
-	log.SetFlags(log.Ldate | log.Lshortfile)
 	server := http.Server{
 		Addr: "0.0.0.0:8080",
 	}
