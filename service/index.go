@@ -54,4 +54,3 @@ func GetAllIndexInfo(page, pageSize int) (*models.HomeResponse, error) {
 	}
 	return hr, nil
 }
-//
