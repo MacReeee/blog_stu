@@ -74,7 +74,7 @@ func readTemplate(templates []string, path string) ([]TemplateBlog, error) {
 		personal := path + "layout/personal.html"
 		post := path + "layout/post-list.html"
 		pagination := path + "layout/pagination.html"
-		t.Funcs(template.FuncMap{"isODD": isODD, "getNextName": getNextName, "date": date, "dateDay": dateDay})
+		t.Funcs(template.FuncMap{"isODD": IsODD, "getNextName": GetNextName, "date": Date, "dateDay": DateDay})
 		t, err := t.ParseFiles(path+viewName, home, header, footer, personal, post, pagination)
 		if err != nil {
 			log.Println("错误:", err)
@@ -85,18 +85,18 @@ func readTemplate(templates []string, path string) ([]TemplateBlog, error) {
 	return tbs, nil
 }
 
-func isODD(num int) bool {
+func IsODD(num int) bool {
 	return num%2 == 0
 }
 
-func getNextName(strs []string, index int) string {
+func GetNextName(strs []string, index int) string {
 	return strs[index+1]
 }
 
-func date(layout string) string {
+func Date(layout string) string {
 	return time.Now().Format(layout)
 }
 
-func dateDay(date time.Time) string {
+func DateDay(date time.Time) string {
 	return date.Format("2006-01-02 15:04:05")
 }

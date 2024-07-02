@@ -4,34 +4,53 @@ import (
 	"goblog/config"
 	"goblog/dao"
 	"goblog/models"
+	"html/template"
 )
 
-func GetAllIndexInfo() (*models.HomeResponse, error) {
+func GetAllIndexInfo(page, pageSize int) (*models.HomeResponse, error) {
 	categorys, err := dao.GetAllCategory()
 	if err != nil {
 		return nil, err
 	}
-	var posts = []models.PostMore{
-		{
-			Pid:          1,
-			Title:        "go博客",
-			Content:      "内容",
-			UserName:     "张三",
-			ViewCount:    123,
-			CreateAt:     "2022-02-20",
-			CategoryId:   1,
-			CategoryName: "go",
-			Type:         0,
-		},
+	posts, err := dao.GetPostPage(page, pageSize)
+	var postsMore []models.PostMore
+	for _, post := range posts {
+		categoryName, _ := dao.GetCategoryNameById(post.CategoryId)
+		userName, _ := dao.GetUserNameById(post.UserId)
+		content := []rune(post.Content)
+		if len(content) > 200 {
+			content = content[:200]
+		}
+		var postMore = models.PostMore{
+			Pid:          post.Pid,
+			Title:        post.Title,
+			Slug:         post.Slug,
+			Content:      template.HTML(content),
+			CategoryId:   post.CategoryId,
+			CategoryName: categoryName,
+			UserId:       post.UserId,
+			UserName:     userName,
+			ViewCount:    post.ViewCount,
+			Type:         post.Type,
+			CreateAt:     models.DateDay(post.CreateAt),
+			UpdateAt:     models.DateDay(post.UpdateAt),
+		}
+		postsMore = append(postsMore, postMore)
+	}
+	total := dao.CountGetAllPost()
+	pagesNum := (total-1)/10 + 1
+	pages := make([]int, pagesNum)
+	for i := 0; i < pagesNum; i++ {
+		pages[i] = i+1
 	}
 	var hr = &models.HomeResponse{
 		Viewer:    config.Cfg.Viewer,
 		Categorys: categorys,
-		Posts:     posts,
-		Total:     1,
-		Page:      1,
-		Pages:     []int{1},
-		PageEnd:   true,
+		Posts:     postsMore,
+		Total:     total,
+		Page:      page,
+		Pages:     pages,
+		PageEnd:   page != pagesNum,
 	}
 	return hr, nil
 }
