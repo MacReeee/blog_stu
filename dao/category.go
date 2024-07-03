@@ -15,15 +15,7 @@ func GetCategoryNameById(cid int) (string, error) {
 	return name, nil
 }
 
-func GetUserNameById(uid int) (string, error) {
-	var name string
-	err := DB.QueryRow("select user_name from blog_user where uid = ?", uid).Scan(&name)
-	if err != nil {
-		log.Println("GetUserNameById 查询出错", err)
-		return "", err
-	}
-	return name, nil
-}
+
 func GetAllCategory() ([]models.Category, error) {
 	rows, err := DB.Query("select * from blog_category")
 	if err != nil {

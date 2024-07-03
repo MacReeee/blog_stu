@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/json"
+	"goblog/api"
 	"goblog/views"
 	"net/http"
 )
@@ -22,5 +23,6 @@ func Router() {
 	http.HandleFunc("/login", views.HTML.Login)
 	http.HandleFunc("/c/", views.HTML.Category)
 	http.HandleFunc("/", views.HTML.Index)
+	http.HandleFunc("/api/v1/login", api.API.Login)
 	http.Handle("/resource/", http.StripPrefix("/resource/", http.FileServer(http.Dir("public/resource/"))))
 }
