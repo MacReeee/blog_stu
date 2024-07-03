@@ -16,6 +16,33 @@ func CountGetAllPostByCategoryID(cid int) int {
 	return count
 }
 
+func GetPostById(pid int) (*models.Post, error) {
+	row := DB.QueryRow("select * from blog_post where pid = ?", pid)
+	if row.Err() != nil {
+		log.Println("GetPostPage 查询出错", row.Err())
+		return nil, row.Err()
+	}
+	post := &models.Post{}
+	err := row.Scan(
+		&post.Pid,
+		&post.Title,
+		&post.Content,
+		&post.Markdown,
+		&post.CategoryId,
+		&post.UserId,
+		&post.ViewCount,
+		&post.Type,
+		&post.Slug,
+		&post.CreateAt,
+		&post.UpdateAt,
+	)
+	if err != nil {
+		log.Println("GetPostPage 取值出错", err)
+		return nil, err
+	}
+	return post, nil
+}
+
 func CountGetAllPost() int {
 	rows := DB.QueryRow("select count(1) from blog_post")
 	count := 0
