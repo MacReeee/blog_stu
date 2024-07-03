@@ -24,7 +24,6 @@ func GetUserNameById(uid int) (string, error) {
 	}
 	return name, nil
 }
-
 func GetAllCategory() ([]models.Category, error) {
 	rows, err := DB.Query("select * from blog_category")
 	if err != nil {
