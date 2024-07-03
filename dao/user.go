@@ -16,7 +16,7 @@ func GetUserNameById(uid int) (string, error) {
 }
 
 func GetUser(userName, password string) (*models.User, error) {
-	user  := &models.User{}
+	user := &models.User{}
 	row := DB.QueryRow(
 		"select * from blog_user where user_name = ? and passwd = ? limit 1",
 		userName,
