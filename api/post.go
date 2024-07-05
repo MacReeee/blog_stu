@@ -6,6 +6,7 @@ import (
 	"goblog/models"
 	"goblog/service"
 	"goblog/utils"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -25,6 +26,7 @@ func (*Api) SaveAndUpdatePoset(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost: // post -> save
 		params := common.GetRequestJsonParam(r)
 		if params["type"] == nil {
+			log.Println("type参数为空")
 			params["type"] = 0.0
 		}
 		// // 测试获取所有参数
