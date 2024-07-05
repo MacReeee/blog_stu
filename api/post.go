@@ -3,16 +3,34 @@ package api
 import (
 	"errors"
 	"goblog/common"
+	"goblog/dao"
 	"goblog/models"
 	"goblog/service"
 	"goblog/utils"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
-func (*Api) SaveAndUpdatePoset(w http.ResponseWriter, r *http.Request) {
+func (*Api) GetPost(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path
+	pidStr := strings.TrimPrefix(path, "/api/v1/post/")
+	pid, err := strconv.Atoi(pidStr)
+	if err != nil {
+		common.Error(w, errors.New("不识别此请求路径,请联系管理员: "+string(err.Error())))
+		return
+	}
+	post, err := dao.GetPostById(pid)
+	if err != nil {
+		common.Error(w, err)
+		return
+	}
+	common.Success(w, post)
+}
+
+func (*Api) SaveAndUpdatePost(w http.ResponseWriter, r *http.Request) {
 	//获取用户ID，判断登录状态
 	token := r.Header.Get("Authorization")
 	_, claim, err := utils.ParseToken(token)
@@ -58,5 +76,38 @@ func (*Api) SaveAndUpdatePoset(w http.ResponseWriter, r *http.Request) {
 		service.SavePost(post)
 		common.Success(w, post)
 	case http.MethodPut: // put -> update
+		params := common.GetRequestJsonParam(r)
+		if params["type"] == nil {
+			log.Println("type参数为空")
+			params["type"] = 0.0
+		}
+		// fmt.Println("params的参数如下：")
+		// for k, v := range params {
+		// 	log.Println(k,v)
+		// }
+		cid := int(params["categoryId"].(float64))
+		categoryId := cid
+		content := params["content"].(string)
+		markdown := params["markdown"].(string)
+		slug := params["slug"].(string)
+		title := params["title"].(string)
+		postType := params["type"].(float64)
+		pidFloat64 := params["pid"].(float64)
+		pid := int(pidFloat64)
+		post := &models.Post{
+			Pid:        pid,
+			Title:      title,
+			Slug:       slug,
+			Content:    content,
+			Markdown:   markdown,
+			CategoryId: categoryId,
+			UserId:     claim.Uid,
+			ViewCount:  0,
+			Type:       int(postType),
+			CreateAt:   time.Now(),
+			UpdateAt:   time.Now(),
+		}
+		service.UodatePost(post)
+		common.Success(w, post)
 	}
 }

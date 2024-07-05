@@ -26,6 +26,23 @@ func SavePost(post *models.Post) {
 	post.Pid = int(pid)
 }
 
+func UpdatePost(post *models.Post) {
+	_, err := DB.Exec("UPDATE blog_post SET title=?, content=?, markdown=?, category_id=?, type=?, slug=?, update_at=? "+
+		"WHERE pid=?",
+		post.Title,
+		post.Content,
+		post.Markdown,
+		post.CategoryId,
+		post.Type,
+		post.Slug,
+		post.UpdateAt,
+		post.Pid,
+	)
+	if err != nil {
+		log.Println("UpdatePost 更新出错", err)
+	}
+}
+
 func CountGetAllPostByCategoryID(cid int) int {
 	rows := DB.QueryRow("select count(1) from blog_post where category_id = ? ", cid)
 	count := 0
