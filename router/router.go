@@ -24,6 +24,7 @@ func Router() {
 	http.HandleFunc("/c/", views.HTML.Category)
 	http.HandleFunc("/p/", views.HTML.Detail)
 	http.HandleFunc("/writing", views.HTML.Writing)
+	http.HandleFunc("/pigeonhole", views.HTML.Pigeonhole)
 	http.HandleFunc("/", views.HTML.Index)
 	http.HandleFunc("/api/v1/login", api.API.Login)
 	http.HandleFunc("/api/v1/post", api.API.SaveAndUpdatePost)

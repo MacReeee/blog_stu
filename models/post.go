@@ -58,7 +58,14 @@ type PostRes struct {
 }
 
 type WritingRes struct {
-	Title string
-	CdnURL string
+	Title     string
+	CdnURL    string
 	Categorys []Category
+}
+
+type Pigeonhole struct {
+	config.Viewer
+	config.SystemConfig
+	Categorys []Category
+	Lines     map[string][]Post
 }
