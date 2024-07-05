@@ -5,6 +5,27 @@ import (
 	"log"
 )
 
+func SavePost(post *models.Post) {
+	res, err := DB.Exec("insert into blog_post(title,content,markdown,category_id,user_id,view_count,type,slug,create_at,update_at) "+
+		"values(?,?,?,?,?,?,?,?,?,?)",
+		post.Title,
+		post.Content,
+		post.Markdown,
+		post.CategoryId,
+		post.UserId,
+		post.ViewCount,
+		post.Type,
+		post.Slug,
+		post.CreateAt,
+		post.UpdateAt,
+	)
+	if err != nil {
+		log.Println("SavePost 插入出错", err)
+	}
+	pid, _ := res.LastInsertId()
+	post.Pid = int(pid)
+}
+
 func CountGetAllPostByCategoryID(cid int) int {
 	rows := DB.QueryRow("select count(1) from blog_post where category_id = ? ", cid)
 	count := 0

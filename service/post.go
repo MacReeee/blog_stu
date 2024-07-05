@@ -8,6 +8,9 @@ import (
 	"log"
 )
 
+func SavePost(post *models.Post){
+	dao.SavePost(post)
+}
 func GetPostDetail(pid int) (*models.PostRes, error) {
 	post, err := dao.GetPostById(pid)
 	if err != nil {
