@@ -1,8 +1,6 @@
 package api
 
 import (
-	"github.com/qiniu/go-sdk/v7/auth/qbox"
-	"github.com/qiniu/go-sdk/v7/storage"
 	"errors"
 	"goblog/common"
 	"goblog/config"
@@ -15,6 +13,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/qiniu/go-sdk/v7/auth/qbox"
+	"github.com/qiniu/go-sdk/v7/storage"
 )
 
 func (*Api) GetPost(w http.ResponseWriter, r *http.Request) {
@@ -125,4 +126,11 @@ func (*Api) QiniuToken(w http.ResponseWriter, r *http.Request) {
 	mac := qbox.NewMac(config.Cfg.System.QiniuAccessKey, config.Cfg.System.QiniuSecretKey)
 	upToken := putPolicy.UploadToken(mac)
 	common.Success(w, upToken)
+}
+
+func (*Api) SearchPost(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	condition := r.Form.Get("val")
+	searchResp := service.SearchPost(condition)
+	common.Success(w, searchResp)
 }

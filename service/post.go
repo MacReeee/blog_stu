@@ -8,11 +8,11 @@ import (
 	"log"
 )
 
-func SavePost(post *models.Post){
+func SavePost(post *models.Post) {
 	dao.SavePost(post)
 }
 
-func UodatePost(post *models.Post){
+func UodatePost(post *models.Post) {
 	dao.UpdatePost(post)
 }
 
@@ -56,4 +56,20 @@ func Writing() (*models.WritingRes, error) {
 		Categorys: categorys,
 	}
 	return wr, nil
+}
+
+func SearchPost(condition string) []models.SearchResp {
+	posts, err := dao.GetPostSearch(condition)
+	if err != nil {
+		log.Println("SearchPost 查询出错", err)
+		return nil
+	}
+	var searchResps []models.SearchResp
+	for _, post := range posts {
+		searchResps = append(searchResps, models.SearchResp{
+			Pid:   post.Pid,
+			Title: post.Title,
+		})
+	}
+	return searchResps
 }

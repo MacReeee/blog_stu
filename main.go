@@ -13,6 +13,7 @@ func init() {
 
 func main() {
 	common.LoadTemplate()
+	
 	server := http.Server{
 		Addr: "0.0.0.0:8080",
 	}
